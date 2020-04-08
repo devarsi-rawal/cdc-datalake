@@ -5,7 +5,7 @@ The prototype requires Python3, [Apache Spark 2.4.5](https://www.apache.org/dyn/
 Download Spark from any of the mirror links above above. Extract the contents from the .tgz file and move it to a desired location (I used /usr/lib/spark).
 ```sh
 $ tar -zxvf [spark-file-name].tgz
-$ cp -r [spark-directory] {your-path}/spark
+$ cp -r [spark-directory] [your-path]/spark
 ```
 Spark is pre-built with Scala 2.11, so you also need the Java JVM 8. Here's the link to [JDK 8](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html). You may need to create an Oracle account to download the JDK. Once you have downloaded the JDK unpack it and move it to a desired location (I used /opt/jdk/jdk1.8.0_202).
 
