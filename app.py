@@ -35,7 +35,7 @@ def filter_update(attrname, old, new):
 bokeh_doc = curdoc()
 
 # Read csv using spark
-findspark.init('/usr/lib/spark/')
+findspark.init('./spark')
 spark = SparkSession.builder.appName('Wonder').getOrCreate()
 df = spark.read.load('./data/CaseCounts.csv', format='com.databricks.spark.csv', header='true', inferSchema='true')
 newdf = df.groupBy(df['disease']).sum()
