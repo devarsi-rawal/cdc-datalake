@@ -37,6 +37,10 @@ In terminal, run:
 ```sh
 $ pip3 install pandas
 ```
+You will also need the findspark library. To install, run:
+```sh
+$ pip3 install findspark
+```
 ## Running the Application
 To run the application, simply use:
 ```sh
