@@ -32,6 +32,10 @@ In terminal, run:
 ```sh
 $ pip3 install pyspark
 ```
+You will also need the findspark library. To install, run:
+```sh
+$ pip3 install findspark
+```
 ### Pandas Installation Instructions:
 In terminal, run:
 ```sh
