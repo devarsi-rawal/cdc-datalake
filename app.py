@@ -23,10 +23,7 @@ import math
 def filter_update(attrname, old, new):
     filter_df = orig_pddf[orig_pddf["age"].between(age_slider.value[0], age_slider.value[1])]
     filter_df = filter_df[filter_df['disease'].isin(multi_select.value)]
-    print(filter_df)
     filter_df = filter_df.groupby(['disease']).sum()
-    print(filter_df)
-    # print(filter_df.head())
     new_source = ColumnDataSource(filter_df)
     new_diseases = new_source.data['disease'].tolist()
     new_diseases.sort()
@@ -42,24 +39,28 @@ findspark.init(os.environ["SPARK_HOME"])
 spark = SparkSession.builder.appName('Wonder').getOrCreate()
 df = spark.read.load('./data/CaseCounts.csv', format='com.databricks.spark.csv', header='true', inferSchema='true')
 orig_pddf = df.toPandas()
+diseases = orig_pddf["disease"].unique().tolist()
+states = orig_pddf["state"].unique().tolist()
+sexes = orig_pddf["sex"].unique().tolist()
+races = orig_pddf["race"].unique().tolist()
+ethns = orig_pddf["ethnicity"].unique().tolist()
 pddf = orig_pddf.groupby(['disease']).sum()
 # pddf.rename(columns = {'sum(case counts)':'case_counts'}, inplace = True) # Accomodate for bokeh typing issues
 
 # Bokeh stuff
 source = ColumnDataSource(pddf)
-diseases = source.data['disease'].tolist()
 diseases.sort()
 diseases = list(map(str, diseases))
-plot = figure(plot_height=800, plot_width=1000, x_range=diseases, sizing_mode="stretch_both")
+plot = figure(plot_height=700, plot_width=1000, x_range=diseases, sizing_mode="stretch_both")
 
 # Create disease multiselect
-multi_select = MultiSelect(title="Diseases", value=diseases, options=diseases, height=100, sizing_mode="stretch_both")
+multi_select = MultiSelect(title="Diseases", value=diseases, options=diseases, height=200, sizing_mode="stretch_width")
 multi_select.on_change('value', filter_update)
 
 # Create age slider
 ages = df.select("age").rdd.flatMap(lambda x: x).collect()
 ages.sort()
-age_slider = RangeSlider(title="Age", start=ages[0], end=ages[-1], value=(ages[0], ages[-1]), step=5, sizing_mode="stretch_both")
+age_slider = RangeSlider(title="Age", start=ages[0], end=ages[-1], value=(ages[0], ages[-1]), step=5, sizing_mode="stretch_width")
 age_slider.on_change("value", filter_update)
 
 # Add plot details
