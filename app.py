@@ -21,16 +21,18 @@ import math
 #     plot.x_range.factors = new_diseases
     
 def filter_update(attrname, old, new):
-    age_df = df[df["age"].between(age_slider.value[0], age_slider.value[1])]
-    age_df = age_df.groupBy(df['disease']).sum()
-    age_pddf = age_df.toPandas()
-    age_pddf.rename(columns = {'sum(case counts)':'case_counts'}, inplace = True)
-    new_source = ColumnDataSource(age_pddf[age_pddf["disease"].isin(multi_select.value)])
+    filter_df = orig_pddf[orig_pddf["age"].between(age_slider.value[0], age_slider.value[1])]
+    filter_df = filter_df[filter_df['disease'].isin(multi_select.value)]
+    print(filter_df)
+    filter_df = filter_df.groupby(['disease']).sum()
+    print(filter_df)
+    # print(filter_df.head())
+    new_source = ColumnDataSource(filter_df)
     new_diseases = new_source.data['disease'].tolist()
     new_diseases.sort()
     new_diseases = list(map(str, new_diseases))
     plot.x_range.factors = new_diseases
-
+    source.data.update(new_source.data)
     
 
 bokeh_doc = curdoc()
@@ -39,9 +41,9 @@ bokeh_doc = curdoc()
 findspark.init(os.environ["SPARK_HOME"])
 spark = SparkSession.builder.appName('Wonder').getOrCreate()
 df = spark.read.load('./data/CaseCounts.csv', format='com.databricks.spark.csv', header='true', inferSchema='true')
-newdf = df.groupBy(df['disease']).sum()
-pddf = newdf.toPandas()
-pddf.rename(columns = {'sum(case counts)':'case_counts'}, inplace = True) # Accomodate for bokeh typing issues
+orig_pddf = df.toPandas()
+pddf = orig_pddf.groupby(['disease']).sum()
+# pddf.rename(columns = {'sum(case counts)':'case_counts'}, inplace = True) # Accomodate for bokeh typing issues
 
 # Bokeh stuff
 source = ColumnDataSource(pddf)
@@ -57,11 +59,11 @@ multi_select.on_change('value', filter_update)
 # Create age slider
 ages = df.select("age").rdd.flatMap(lambda x: x).collect()
 ages.sort()
-age_slider = RangeSlider(title="Age", start=ages[0], end=ages[-1], value=(ages[0], ages[-1]), step=1, sizing_mode="stretch_both")
+age_slider = RangeSlider(title="Age", start=ages[0], end=ages[-1], value=(ages[0], ages[-1]), step=5, sizing_mode="stretch_both")
 age_slider.on_change("value", filter_update)
 
 # Add plot details
-plot.vbar(x='disease', top="case_counts", source=source, width=0.70)
+plot.vbar(x='disease', top="case counts", source=source, width=0.70)
 plot.title.text = "Case Counts per Disease"
 plot.xaxis.axis_label = "Disease"
 plot.yaxis.axis_label = "Case Counts"
@@ -71,12 +73,12 @@ plot.xaxis.major_label_orientation = "vertical"
 hover = HoverTool()
 hover.tooltips = [
     ("Disease", "@disease"),
-    ("Count", "@case_counts")
+    ("Count", "@{case counts}")
 ]
 
 hover.mode = "vline"
 plot.add_tools(hover)
-filters = column([multi_select], width=500, height=1000)
+filters = column([multi_select, age_slider], width=500, height=1000)
 bokeh_doc.add_root(row([filters, plot]))
 
 bokeh_doc.title = "CDC Data Lake"
