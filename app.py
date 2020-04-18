@@ -70,7 +70,7 @@ age_slider.on_change("value", filter_update)
 # Create year slider
 years = df.select("year reported").rdd.flatMap(lambda x: x).collect()
 years.sort()
-year_slider = RangeSlider(title="Years (20)", start=years[0], end=years[-1], value=(years[0], years[-1]), step=1, sizing_mode="stretch_width")
+year_slider = RangeSlider(title="Years (2000s) ", start=years[0], end=years[-1], value=(years[0], years[-1]), step=1, sizing_mode="stretch_width")
 year_slider.on_change("value", filter_update)
 
 #race multiselect
