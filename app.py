@@ -25,6 +25,7 @@ def filter_update(attrname, old, new):
     filter_df = filter_df[filter_df['race'].isin(race_multi_select.value)]
     filter_df = filter_df[filter_df['ethnicity'].isin(ethnicity_multi_select.value)]
     filter_df = filter_df[filter_df['sex'].isin(sex_multi_select.value)]
+    filter_df = filter_df[orig_pddf["year reported"].between(year_slider.value[0], year_slider.value[1])]
     filter_df = filter_df[filter_df['disease'].isin(multi_select.value)]
     filter_df = filter_df.groupby(['disease']).sum()
     new_source = ColumnDataSource(filter_df)
@@ -66,6 +67,12 @@ ages.sort()
 age_slider = RangeSlider(title="Age", start=ages[0], end=ages[-1], value=(ages[0], ages[-1]), step=5, sizing_mode="stretch_width")
 age_slider.on_change("value", filter_update)
 
+# Create year slider
+years = df.select("year reported").rdd.flatMap(lambda x: x).collect()
+years.sort()
+year_slider = RangeSlider(title="Years (20)", start=years[0], end=years[-1], value=(years[0], years[-1]), step=1, sizing_mode="stretch_width")
+year_slider.on_change("value", filter_update)
+
 #race multiselect
 races.sort()
 races = list(map(str, races))
@@ -103,7 +110,7 @@ hover.tooltips = [
 
 hover.mode = "vline"
 plot.add_tools(hover)
-filters = column([multi_select, age_slider, ethnicity_multi_select, race_multi_select, sex_multi_select], width=500, height=1000)
+filters = column([multi_select, age_slider, ethnicity_multi_select, race_multi_select, sex_multi_select, year_slider], width=500, height=1000)
 bokeh_doc.add_root(row([filters, plot]))
 
 bokeh_doc.title = "CDC Data Lake"
