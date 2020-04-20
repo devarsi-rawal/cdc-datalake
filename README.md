@@ -9,31 +9,31 @@ Spark is pre-built with Scala 2.11, so you also need the Java JVM 8. Here's the 
 
 You will need to create environment variables so that the application knows where to find Spark and Java 8. Use the following commands:
 ```cmd
-cmd> setx JAVA_HOME "C:\Progra~1\Java\jdk14.0.1"
-cmd> setx SPARK_HOME "C:\Spark\[spark-directory]"
-cmd> setx PATH "%PATH%;%JAVA_HOME%\bin"
-cmd> setx PATH "%PATH%;%SPARK_HOME%\bin"
-cmd> setx PATH "%PATH%;%SPARK_HOME%\sbin"
+> setx JAVA_HOME "C:\Progra~1\Java\jdk14.0.1"
+> setx SPARK_HOME "C:\Spark\[spark-directory]"
+> setx PATH "%PATH%;%JAVA_HOME%\bin"
+> setx PATH "%PATH%;%SPARK_HOME%\bin"
+> setx PATH "%PATH%;%SPARK_HOME%\sbin"
 ```
-Run ``` cmd> spark-submit --version``` to make sure spark has installed properly.
+Run ```cmd > spark-submit --version``` to make sure spark has installed properly.
 ### Bokeh Installation
 Make sure you have Python 3 and pip installed (if you have Python 3.4 or later, pip is automatically installed). To install Bokeh via terminal, run:
-```sh
-$ pip install bokeh
+```cmd
+> pip install bokeh
 ```
 ### PySpark Installation
 In terminal, run:
-```sh
-$ pip install pyspark
+```cmd
+> pip install pyspark
 ```
 You will also need the findspark library. To install, run:
-```sh
-$ pip install findspark
+```cmd
+> pip install findspark
 ```
 ### Pandas Installation
 In terminal, run:
-```sh
-$ pip install pandas
+```cmd
+> pip install pandas
 ```
 
 ## Unix/Mac Installation
