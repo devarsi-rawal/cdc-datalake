@@ -15,7 +15,7 @@ You will need to create environment variables so that the application knows wher
 > setx PATH "%PATH%;%SPARK_HOME%\bin"
 > setx PATH "%PATH%;%SPARK_HOME%\sbin"
 ```
-Run ```cmd > spark-submit --version``` to make sure spark has installed properly.
+Run ```> spark-submit --version``` to make sure spark has installed properly.
 ### Bokeh Installation
 Make sure you have Python 3 and pip installed (if you have Python 3.4 or later, pip is automatically installed). To install Bokeh via terminal, run:
 ```cmd
